@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP2 Pag-IBIG Calculator | Philippines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066CC;
+            --primary-dark: #004999;
+            --secondary: #00A651;
+            --accent: #FF6B35;
+            --bg-light: #F8FAFB;
+            --bg-white: #FFFFFF;
+            --text-primary: #1A2332;
+            --text-secondary: #5A6C7D;
+            --border: #E1E8ED;
+            --success: #10B981;
+            --gradient-1: linear-gradient(135deg, #0066CC 0%, #004999 100%);
+            --gradient-2: linear-gradient(135deg, #00A651 0%, #008A43 100%);
+            --gradient-3: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--gradient-1);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Card System */
+        .card {
+            background: var(--bg-white);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Input Section */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 1rem 1rem 1rem 2.5rem;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-white);
+            transition: all 0.3s ease;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Results Cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .result-card:nth-child(1) { animation-delay: 0.1s; }
+        .result-card:nth-child(2) { animation-delay: 0.2s; }
+        .result-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .result-card.blue::before { background: var(--gradient-1); }
+        .result-card.green::before { background: var(--gradient-2); }
+        .result-card.orange::before { background: var(--gradient-3); }
+
+        .result-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .result-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .result-card.green .result-value {
+            color: var(--secondary);
+        }
+
+        .result-subtext {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Profit Highlight */
+        .profit-highlight {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border: 2px solid var(--secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profit-highlight::before {
+            content: '🎉';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        .profit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .profit-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2E7D32;
+        }
+
+        .profit-amount {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary);
+            letter-spacing: -0.02em;
+        }
+
+        .roi-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+        }
+
+        thead {
+            background: #F8FAFB;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border);
+        }
+
+        th:last-child,
+        td:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9375rem;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #F8FAFB;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .year-cell {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .amount-cell {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .dividend-cell {
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .total-cell {
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: #FFF8E1;
+            border-left: 4px solid #FFA000;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        .disclaimer-title {
+            font-weight: 700;
+            color: #F57C00;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .disclaimer-text {
+            font-size: 0.8125rem;
+            color: #5D4037;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .result-value {
+                font-size: 1.75rem;
+            }
+
+            .profit-amount {
+                font-size: 2rem;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.8125rem;
+            }
+        }
+
+        /* Pulse effect for profit */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .profit-highlight {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* One-time contribution card styles */
+        .one-time-card {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            border: 2px solid #BAE6FD;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .one-time-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .one-time-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9375rem;
+        }
+
+        .remove-btn {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background: #DC2626;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        #addOneTimeBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        select {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-badge">
+                <div class="logo-icon">🏦</div>
+                Pag-IBIG MP2 Savings
+            </div>
+            <h1>MP2 Investment Calculator</h1>
+            <p class="subtitle">Plan your Modified Pag-IBIG II savings and see your potential returns</p>
+        </div>
+
+        <!-- Input Card -->
+        <div class="card" style="animation-delay: 0.1s;">
+            <div class="card-header">
+                <div class="card-icon">📊</div>
+                <h2 class="card-title">Your Investment Details</h2>
+            </div>
+            
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">Monthly Contribution</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">₱</span>
+                        <input type="number" id="monthlyContribution" value="1000" min="500" step="100">
+                    </div>
+                    <p class="input-hint">💡 Minimum: ₱500/month</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Start Year</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">📅</span>
+                        <input type="number" id="startYear" value="2026" min="2024" max="2035">
+                    </div>
+                    <p class="input-hint">📌 When you'll begin investing</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Start Month</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">📅</span>
+                        <select id="startMonth" style="width: 100%; padding: 1rem 1rem 1rem 2.5rem; border: 2px solid var(--border); border-radius: 14px; font-size: 1.125rem; font-weight: 600; color: var(--text-primary); background: var(--bg-white); transition: all 0.3s ease; font-family: 'DM Sans', sans-serif;">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                    <p class="input-hint">🗓️ Month you start contributing</p>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Expected Dividend Rate</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">%</span>
+                        <input type="number" id="dividendRate" value="6.5" min="0" max="15" step="0.1">
+                    </div>
+                    <p class="input-hint">📈 Historical: 5-7% annually</p>
+                </div>
+            </div>
+
+            <!-- One-time Contribution Section -->
+            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 48px; height: 48px; background: var(--gradient-2); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                            💵
+                        </div>
+                        <h3 class="card-title">One-Time Contributions (Optional)</h3>
+                    </div>
+                    <button id="addOneTimeBtn" style="background: var(--gradient-2); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9375rem;">
+                        <span style="font-size: 1.25rem;">+</span> Add One-Time
+                    </button>
+                </div>
+
+                <div id="oneTimeContainer">
+                    <!-- One-time contributions will be added here dynamically -->
+                </div>
+
+                <div id="noOneTimeMessage" style="text-align: center; padding: 2rem; color: var(--text-secondary); font-style: italic;">
+                    Click "Add One-Time" to add lump sum contributions during your 5-year investment period
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="results-grid">
+            <div class="result-card blue">
+                <p class="result-label">Total Contributions</p>
+                <p class="result-value" id="totalContributions">₱0.00</p>
+                <p class="result-subtext" id="contributionBreakdown">Monthly + One-time</p>
+            </div>
+
+            <div class="result-card green">
+                <p class="result-label">Projected Earnings</p>
+                <p class="result-value" id="projectedEarnings">₱0.00</p>
+                <p class="result-subtext">From dividends</p>
+            </div>
+
+            <div class="result-card orange">
+                <p class="result-label">Maturity Value</p>
+                <p class="result-value" id="maturityValue">₱0.00</p>
+                <p class="result-subtext" id="maturityYear">In 2031</p>
+            </div>
+        </div>
+
+        <!-- Profit Highlight -->
+        <div class="profit-highlight">
+            <div class="profit-header">
+                <span class="profit-label">💰 YOUR TOTAL PROFIT</span>
+            </div>
+            <div class="profit-amount" id="profitAmount">₱0.00</div>
+            <div class="roi-badge">
+                <span>🚀 ROI:</span>
+                <span id="roiPercent">0.00%</span>
+            </div>
+        </div>
+
+        <!-- Yearly Breakdown -->
+        <div class="card" style="animation-delay: 0.4s;">
+            <div class="card-header">
+                <div class="card-icon">📈</div>
+                <h2 class="card-title">Year-by-Year Breakdown</h2>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Monthly Contrib.</th>
+                            <th>One-Time Contrib.</th>
+                            <th>Dividend Earned</th>
+                            <th>Year-End Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyBreakdown">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+            <div class="disclaimer-title">⚠️ IMPORTANT DISCLAIMER</div>
+            <p class="disclaimer-text">
+                This calculator provides estimates based on the dividend rate you input. Actual MP2 dividend rates vary yearly and are declared by Pag-IBIG Fund based on their investment performance. Past performance does not guarantee future results. Historical rates have ranged from approximately 5-7% annually. Please consult with Pag-IBIG directly for the most accurate and up-to-date information.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 
+                       'July', 'August', 'September', 'October', 'November', 'December'];
+
+        let oneTimeContributions = [];
+        let nextId = 1;
+
+        function formatPeso(amount) {
+            return '₱' + amount.toLocaleString('en-PH', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+        }
+
+        function addOneTimeContribution() {
+            const id = nextId++;
+            oneTimeContributions.push({
+                id: id,
+                amount: 10000,
+                year: 1,
+                month: 6
+            });
+            renderOneTimeContributions();
+            updateDisplay();
+        }
+
+        function removeOneTimeContribution(id) {
+            oneTimeContributions = oneTimeContributions.filter(c => c.id !== id);
+            renderOneTimeContributions();
+            updateDisplay();
+        }
+
+        function updateOneTimeContribution(id, field, value) {
+            const contrib = oneTimeContributions.find(c => c.id === id);
+            if (contrib) {
+                contrib[field] = field === 'amount' ? parseFloat(value) : parseInt(value);
+                updateDisplay();
+            }
+        }
+
+        function renderOneTimeContributions() {
+            const container = document.getElementById('oneTimeContainer');
+            const noMessage = document.getElementById('noOneTimeMessage');
+            
+            if (oneTimeContributions.length === 0) {
+                container.innerHTML = '';
+                noMessage.style.display = 'block';
+                return;
+            }
+
+            noMessage.style.display = 'none';
+            
+            container.innerHTML = oneTimeContributions.map((contrib, index) => `
+                <div class="one-time-card">
+                    <div class="one-time-header">
+                        <span class="one-time-title">💰 One-Time Contribution #${index + 1}</span>
+                        <button class="remove-btn" onclick="removeOneTimeContribution(${contrib.id})">×</button>
+                    </div>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label class="input-label">Amount</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">₱</span>
+                                <input type="number" value="${contrib.amount}" min="1000" step="1000" 
+                                    onchange="updateOneTimeContribution(${contrib.id}, 'amount', this.value)">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Year</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">📆</span>
+                                <input type="number" value="${contrib.year}" min="1" max="5"
+                                    onchange="updateOneTimeContribution(${contrib.id}, 'year', this.value)">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Month</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">📅</span>
+                                <select onchange="updateOneTimeContribution(${contrib.id}, 'month', this.value)"
+                                    style="width: 100%; padding: 1rem 1rem 1rem 2.5rem; border: 2px solid var(--border); border-radius: 14px; font-size: 1.125rem; font-weight: 600; color: var(--text-primary); background: var(--bg-white); transition: all 0.3s ease; font-family: 'DM Sans', sans-serif;">
+                                    ${MONTHS.map((month, i) => `
+                                        <option value="${i + 1}" ${contrib.month === i + 1 ? 'selected' : ''}>${month}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function calculateProjections() {
+            const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value) || 0;
+            const startYear = parseInt(document.getElementById('startYear').value) || 2026;
+            const startMonth = parseInt(document.getElementById('startMonth').value) || 1;
+            const dividendRate = parseFloat(document.getElementById('dividendRate').value) || 0;
+            
+            const tenure = 5; // Fixed to 5 years
+
+            let totalMonthlyContributions = 0;
+            let totalOneTimeContributions = 0;
+            let projectedEarnings = 0;
+            let runningBalance = 0;
+            const yearlyBreakdown = [];
+
+            for (let year = 0; year < tenure; year++) {
+                const yearNumber = year + 1;
+                
+                // Calculate which calendar year and month this investment year starts
+                let investmentYearStart = startYear + year;
+                let investmentYearEnd = startYear + year;
+                let endMonth = startMonth - 1;
+                if (endMonth === 0) {
+                    endMonth = 12;
+                } else {
+                    investmentYearEnd++;
+                }
+                
+                // Track balance for dividend calculation
+                let yearStartBalance = runningBalance;
+                let yearEndBalance = runningBalance;
+                let totalDividendForYear = 0;
+                
+                // Add 12 monthly contributions for this investment year
+                const yearlyMonthlyContribution = monthlyContribution * 12;
+                totalMonthlyContributions += yearlyMonthlyContribution;
+                
+                // Calculate dividend from monthly contributions
+                // Each monthly contribution earns interest for the remaining months of the investment year
+                for (let month = 0; month < 12; month++) {
+                    yearEndBalance += monthlyContribution;
+                    // Each monthly contribution earns interest for remaining months of the investment year
+                    const monthsRemaining = 12 - month;
+                    const monthlyDividend = monthlyContribution * (dividendRate / 100) * (monthsRemaining / 12);
+                    totalDividendForYear += monthlyDividend;
+                }
+                
+                // Find all one-time contributions for this investment year
+                const oneTimesForYear = oneTimeContributions.filter(c => c.year === yearNumber);
+                const oneTimeTotal = oneTimesForYear.reduce((sum, c) => sum + (c.amount || 0), 0);
+                totalOneTimeContributions += oneTimeTotal;
+                
+                // Calculate dividend from one-time contributions
+                oneTimesForYear.forEach(contrib => {
+                    const amount = contrib.amount || 0;
+                    yearEndBalance += amount;
+                    
+                    // Calculate position of contribution month within the investment year
+                    // Investment year starts at startMonth
+                    let monthPosition;
+                    if (contrib.month >= startMonth) {
+                        // Same calendar year as start
+                        monthPosition = contrib.month - startMonth;
+                    } else {
+                        // Next calendar year
+                        monthPosition = (12 - startMonth) + contrib.month;
+                    }
+                    
+                    // Pro-rate dividend based on how many months remain in the investment year
+                    const monthsRemaining = 12 - monthPosition;
+                    const oneTimeDividend = amount * (dividendRate / 100) * (monthsRemaining / 12);
+                    totalDividendForYear += oneTimeDividend;
+                });
+                
+                // Calculate dividend on the starting balance for the full year
+                const startBalanceDividend = yearStartBalance * (dividendRate / 100);
+                totalDividendForYear += startBalanceDividend;
+                
+                projectedEarnings += totalDividendForYear;
+                runningBalance = yearEndBalance + totalDividendForYear;
+
+                yearlyBreakdown.push({
+                    yearNumber: yearNumber,
+                    investmentYearStart: investmentYearStart,
+                    investmentYearEnd: investmentYearEnd,
+                    startMonth: startMonth,
+                    endMonth: endMonth,
+                    monthlyContributions: yearlyMonthlyContribution,
+                    oneTimeContributions: oneTimesForYear,
+                    oneTimeTotal: oneTimeTotal,
+                    dividend: totalDividendForYear,
+                    totalValue: runningBalance
+                });
+            }
+
+            const totalContributions = totalMonthlyContributions + totalOneTimeContributions;
+            const maturityValue = totalContributions + projectedEarnings;
+            const roi = totalContributions > 0 ? (projectedEarnings / totalContributions) * 100 : 0;
+
+            return {
+                totalContributions,
+                totalMonthlyContributions,
+                totalOneTimeContributions,
+                projectedEarnings,
+                maturityValue,
+                roi,
+                yearlyBreakdown,
+                tenure,
+                startYear,
+                startMonth
+            };
+        }
+
+        function updateDisplay() {
+            const results = calculateProjections();
+
+            // Update summary cards
+            document.getElementById('totalContributions').textContent = formatPeso(results.totalContributions);
+            document.getElementById('projectedEarnings').textContent = formatPeso(results.projectedEarnings);
+            document.getElementById('maturityValue').textContent = formatPeso(results.maturityValue);
+            
+            // Show breakdown of contributions
+            if (results.totalOneTimeContributions > 0) {
+                const monthlyTotal = formatPeso(results.totalMonthlyContributions);
+                const oneTimeTotal = formatPeso(results.totalOneTimeContributions);
+                document.getElementById('contributionBreakdown').innerHTML = 
+                    `Monthly: ${monthlyTotal}<br>One-time: ${oneTimeTotal}`;
+            } else {
+                document.getElementById('contributionBreakdown').textContent = 'Over 5 years';
+            }
+            
+            // Calculate maturity month and year (5 years from start)
+            const maturityYear = results.startYear + results.tenure;
+            const maturityMonth = results.startMonth - 1; // Month before start month
+            const maturityMonthName = maturityMonth === 0 ? MONTHS[11] : MONTHS[maturityMonth - 1];
+            const actualMaturityYear = maturityMonth === 0 ? maturityYear : maturityYear;
+            
+            document.getElementById('maturityYear').textContent = `${maturityMonthName} ${actualMaturityYear}`;
+
+            // Update profit highlight
+            document.getElementById('profitAmount').textContent = formatPeso(results.projectedEarnings);
+            document.getElementById('roiPercent').textContent = results.roi.toFixed(2) + '%';
+
+            // Update yearly breakdown table
+            const tbody = document.getElementById('yearlyBreakdown');
+            tbody.innerHTML = '';
+            
+            results.yearlyBreakdown.forEach((year, index) => {
+                const row = document.createElement('tr');
+                row.style.animationDelay = `${0.05 * index}s`;
+                
+                let oneTimeDisplay = '-';
+                if (year.oneTimeContributions.length > 0) {
+                    oneTimeDisplay = year.oneTimeContributions.map(c => {
+                        const monthName = MONTHS[c.month - 1];
+                        // Determine which calendar year this month falls in for this investment year
+                        let displayYear = year.investmentYearStart;
+                        if (c.month < year.startMonth) {
+                            displayYear = year.investmentYearEnd;
+                        }
+                        return `${formatPeso(c.amount)}<br><span style="font-size: 0.7rem; color: var(--text-secondary);">(${monthName} ${displayYear})</span>`;
+                    }).join('<br>');
+                }
+                
+                // Show the investment year period
+                const startMonthName = MONTHS[year.startMonth - 1];
+                const endMonthName = MONTHS[year.endMonth - 1];
+                const yearLabel = `Year ${year.yearNumber}<br><span style="font-size: 0.7rem; color: var(--text-secondary);">(${startMonthName} ${year.investmentYearStart} - ${endMonthName} ${year.investmentYearEnd})</span>`;
+                
+                row.innerHTML = `
+                    <td class="year-cell">${yearLabel}</td>
+                    <td class="amount-cell">${formatPeso(year.monthlyContributions)}</td>
+                    <td class="amount-cell" style="color: var(--secondary);">${oneTimeDisplay}</td>
+                    <td class="dividend-cell">${formatPeso(year.dividend)}</td>
+                    <td class="total-cell">${formatPeso(year.totalValue)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Add event listeners
+        document.getElementById('monthlyContribution').addEventListener('input', updateDisplay);
+        document.getElementById('startYear').addEventListener('input', updateDisplay);
+        document.getElementById('startMonth').addEventListener('change', updateDisplay);
+        document.getElementById('dividendRate').addEventListener('input', updateDisplay);
+        document.getElementById('addOneTimeBtn').addEventListener('click', addOneTimeContribution);
+
+        // Initial calculation
+        updateDisplay();
+    </script>
+</body>
+</html>
